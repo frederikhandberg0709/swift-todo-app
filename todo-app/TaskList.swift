@@ -17,9 +17,9 @@ struct TaskList: View {
                     .foregroundStyle(.secondary)
             } else {
                 List(taskViewModel.tasks) { task in
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 3) {
                         Text(task.title)
-                            .font(.headline)
+                            .font(.title2)
                         
                         if (task.description != nil) {
                             Text(task.description ?? "")
