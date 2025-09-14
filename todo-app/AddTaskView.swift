@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddTaskView: View {
     @EnvironmentObject var taskViewModel: TaskViewModel
+    @Environment(\.dismissWindow) private var dismissWindow
     
     @State private var newTodoTitle: String = ""
     @State private var isHoveringTitle: Bool = false
@@ -17,6 +18,10 @@ struct AddTaskView: View {
     @State private var newTodoDescription: String = ""
     @State private var isHoveringDescription: Bool = false
     @FocusState private var isDescriptionFocused: Bool
+    
+    private func isTitleFilled() -> Bool {
+        !newTodoTitle.isEmpty
+    }
     
     private func addTask() {
         let trimmedTitle = newTodoTitle.trimmingCharacters(in: .whitespaces)
@@ -29,6 +34,11 @@ struct AddTaskView: View {
     
     var body: some View {
         VStack {
+            Text("Add New Task")
+                .font(.title)
+                .fontWeight(.medium)
+                .padding(.bottom, 30)
+            
             VStack(spacing: 15) {
                 VStack(alignment: .leading) {
                     Text("Title")
@@ -37,6 +47,7 @@ struct AddTaskView: View {
                     
                     HStack {
                         TextField("Title of task...", text: $newTodoTitle)
+                            .font(.system(size: 15))
                             .textFieldStyle(.plain)
                             .autocorrectionDisabled()
                             .focused($isTitleFocused)
@@ -45,7 +56,7 @@ struct AddTaskView: View {
                             }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .frame(height: 40)
+                    .frame(height: 45)
                     .padding(.horizontal, 12)
                     .contentShape(Rectangle())
                     .onTapGesture { isTitleFocused = true }
@@ -67,7 +78,7 @@ struct AddTaskView: View {
                         .opacity(newTodoDescription.isEmpty ? 0 : 1)
                     
                     HStack {
-                        TextEditorView(text: $newTodoDescription, placeholder: "Description of task...")
+                        TextEditorView(text: $newTodoDescription, placeholder: "Description of task...", fontSize: 15)
                             .focused($isDescriptionFocused)
                             .onExitCommand {
                                 isDescriptionFocused = false
@@ -91,15 +102,19 @@ struct AddTaskView: View {
                 }
             }
             
-            Button(action: addTask) {
-                Text("Add")
+            VStack(spacing: 30) {
+                ButtonView(title: "Create", style: PrimaryButton(), isEnabled: isTitleFilled()) {
+                    addTask()
+                }
+                
+                ButtonView(title: "Go back", style: DangerButton()) {
+                    dismissWindow(id: "add-task")
+                }
             }
-            
-            Button(action: {}) {
-                Text("Cancel")
-            }
+            .padding(.top, 40)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 30)
+        .padding(.vertical, 30)
     }
 }
 

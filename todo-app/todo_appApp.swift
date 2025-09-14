@@ -12,17 +12,19 @@ struct todo_appApp: App {
     @StateObject private var taskViewModel = TaskViewModel()
     
     var body: some Scene {
-        WindowGroup {
+        WindowGroup("My Little Todo App") {
             ContentView()
                 .environmentObject(taskViewModel)
+                .frame(minWidth: 450, minHeight: 550)
         }
+        .defaultSize(width: 450, height: 550)
         
-        WindowGroup(id: "add-task") {
+        Window("Add New Task", id: "add-task") {
             AddTaskView()
                 .environmentObject(taskViewModel)
-                .frame(width: 450, height: 500)
+                .frame(minWidth: 450, minHeight: 550)
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 450, height: 500)
+        .defaultSize(width: 450, height: 550)
     }
 }

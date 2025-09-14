@@ -14,6 +14,7 @@ struct AddTaskBtn: View {
     var body: some View {
         Button(action: { openWindow(id: "add-task") }) {
             Image(systemName: "plus")
+                .font(.system(size: 17))
                 .frame(width: 40, height: 40)
                 .contentShape(Rectangle())
                 .opacity(isHoveringAddButton ? 1.0 : 0.5)

@@ -15,8 +15,10 @@ struct Search: View {
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
+                .font(.system(size: 17))
                 .opacity(isHoveringSearch || isSearchFocused ? 1.0 : 0.5)
             TextField("Search...", text: $searchText)
+                .font(.system(size: 15))
                 .textFieldStyle(.plain)
                 .autocorrectionDisabled()
                 .focused($isSearchFocused)

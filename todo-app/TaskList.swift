@@ -26,6 +26,7 @@ struct TaskList: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    .padding(.vertical, 8)
                 }
                 .scrollContentBackground(.hidden)
             }

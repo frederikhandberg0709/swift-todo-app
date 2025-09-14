@@ -14,14 +14,14 @@ struct TextEditorView: View {
     var bottom: CGFloat = 10
     var left: CGFloat = 0
     var right: CGFloat = 0
-    var font: Font = .body
+    var fontSize: CGFloat = NSFont.systemFontSize
     
     var body: some View {
         NSTextViewRepresentable(
             text: $text,
             placeholder: placeholder,
             insets: NSSize(width: left + right, height: top + bottom),
-            nsFont: NSFont.preferredFont(forTextStyle: .body)
+            nsFont: NSFont.systemFont(ofSize: fontSize)
         )
     }
 }
