@@ -30,6 +30,8 @@ struct AddTaskView: View {
             newTodoTitle = ""
             newTodoDescription = ""
         }
+        
+        dismissWindow()
     }
     
     var body: some View {
