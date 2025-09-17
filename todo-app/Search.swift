@@ -17,8 +17,9 @@ struct Search: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 17))
                 .opacity(isHoveringSearch || isSearchFocused ? 1.0 : 0.5)
+            
             TextField("Search...", text: $searchText)
-                .font(.system(size: 15))
+                .font(.title3)
                 .textFieldStyle(.plain)
                 .autocorrectionDisabled()
                 .focused($isSearchFocused)
@@ -34,10 +35,10 @@ struct Search: View {
         .pointerStyle(.horizontalText)
         .background(isHoveringSearch || isSearchFocused ? Color.white.opacity(0.15) : Color.white.opacity(0.10))
         .overlay(
-            RoundedRectangle(cornerRadius: 8)
+            RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.white.opacity(0.20), lineWidth: 1.5)
         )
-        .cornerRadius(8)
+        .cornerRadius(12)
         .onHover{ hover in
             isHoveringSearch = hover
         }

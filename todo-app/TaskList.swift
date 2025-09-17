@@ -16,17 +16,44 @@ struct TaskList: View {
                 Text("You have no tasks yet.")
                     .foregroundStyle(.secondary)
             } else {
-                List(taskViewModel.tasks) { task in
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(task.title)
-                            .font(.title2)
-                        
-                        if (task.description != nil) {
-                            Text(task.description ?? "")
-                                .foregroundStyle(.secondary)
+                // TODO: Active : Completed
+                // TODO: Hide completed tasks from Active list after 5 seconds of marking completed
+                
+                List {
+                    ForEach(taskViewModel.tasks) { task in
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(task.title)
+                                .font(.title2)
+                            
+                            if let description = task.description, !description.isEmpty {
+                                Text(description)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 8)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                taskViewModel.deleteTask(task)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            
+                            Button {
+                                // TODO: Edit
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            .tint(.blue)
+                        }
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button {
+                                taskViewModel.toggleComplete(task)
+                            } label: {
+                                Label("Complete", systemImage: "checkmark.circle")
+                            }
+                            .tint(.green)
                         }
                     }
-                    .padding(.vertical, 8)
                 }
                 .scrollContentBackground(.hidden)
             }

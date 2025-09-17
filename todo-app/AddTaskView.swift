@@ -23,17 +23,6 @@ struct AddTaskView: View {
         !newTodoTitle.isEmpty
     }
     
-    private func addTask() {
-        let trimmedTitle = newTodoTitle.trimmingCharacters(in: .whitespaces)
-        if !trimmedTitle.isEmpty {
-            taskViewModel.tasks.append(Task(title: trimmedTitle, description: newTodoDescription))
-            newTodoTitle = ""
-            newTodoDescription = ""
-        }
-        
-        dismissWindow()
-    }
-    
     var body: some View {
         VStack {
             Text("Add New Task")
@@ -49,7 +38,7 @@ struct AddTaskView: View {
                     
                     HStack {
                         TextField("Title of task...", text: $newTodoTitle)
-                            .font(.system(size: 15))
+                            .font(.title3)
                             .textFieldStyle(.plain)
                             .autocorrectionDisabled()
                             .focused($isTitleFocused)
@@ -65,10 +54,10 @@ struct AddTaskView: View {
                     .pointerStyle(.horizontalText)
                     .background(isHoveringTitle || isTitleFocused ? Color.white.opacity(0.15) : Color.white.opacity(0.10))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.white.opacity(0.20), lineWidth: 1.5)
                     )
-                    .cornerRadius(8)
+                    .cornerRadius(12)
                     .onHover { hover in
                         isHoveringTitle = hover
                     }
@@ -94,10 +83,10 @@ struct AddTaskView: View {
                     .pointerStyle(.horizontalText)
                     .background(isHoveringDescription || isDescriptionFocused ? Color.white.opacity(0.15) : Color.white.opacity(0.10))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 12)
                             .stroke(Color.white.opacity(0.20), lineWidth: 1.5)
                     )
-                    .cornerRadius(8)
+                    .cornerRadius(12)
                     .onHover { hover in
                         isHoveringDescription = hover
                     }
@@ -106,7 +95,12 @@ struct AddTaskView: View {
             
             VStack(spacing: 30) {
                 ButtonView(title: "Create", style: PrimaryButton(), isEnabled: isTitleFilled()) {
-                    addTask()
+                    taskViewModel.addTask(title: newTodoTitle, description: newTodoDescription)
+                    
+                    newTodoTitle = ""
+                    newTodoDescription = ""
+                    
+                    dismissWindow()
                 }
                 
                 ButtonView(title: "Go back", style: DangerButton()) {
