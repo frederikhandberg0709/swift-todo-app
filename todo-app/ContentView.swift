@@ -12,9 +12,6 @@ struct ContentView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Task Tracker")
-                .font(.title)
-            
             HStack(spacing: 15) {
                 Search()
                 
