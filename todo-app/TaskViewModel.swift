@@ -11,6 +11,14 @@ class TaskViewModel: ObservableObject {
     @Published var tasks: [Task] = []
     @Published var searchText: String = ""
     
+    init() {
+        tasks.append(Task(title: "Buy groceries", description: "Milk, eggs, bread"))
+        tasks.append(Task(title: "Read a book"))
+        tasks.append(Task(title: "Call the doctor", description: "Appointment on Monday"))
+        
+        tasks.append(Task(title: "Organize closet", description: "Get rid of clothes I no longer wear", isCompleted: true))
+    }
+    
     func addTask(title: String, description: String? = nil) {
         let newTask = Task(title: title, description: description)
         tasks.append(newTask)

@@ -10,7 +10,16 @@ import SwiftUI
 struct TaskList: View {
     @EnvironmentObject var taskViewModel: TaskViewModel
     @State private var selectedTab: Int = 0
+    @State private var pendingStatusChange: [UUID: Bool] = [:]
     @Namespace private var animation
+    
+    private func toggleTaskStatus(_ task: Task) {
+        pendingStatusChange[task.id] = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            taskViewModel.toggleComplete(task)
+            pendingStatusChange[task.id] = false
+        }
+    }
     
     var filteredTasks: [Task] {
         if selectedTab == 0 {
@@ -47,6 +56,7 @@ struct TaskList: View {
                         }
                     }
                     .frame(width: 100)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 
@@ -74,6 +84,7 @@ struct TaskList: View {
                         }
                     }
                     .frame(width: 100)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
@@ -87,6 +98,7 @@ struct TaskList: View {
                 Text(selectedTab == 0 ? "No active tasks." : "No completed tasks.")
                     .foregroundStyle(.secondary)
                     .padding()
+                
                 Spacer()
             } else {
                 List {
@@ -101,12 +113,35 @@ struct TaskList: View {
                             }
                         }
                         .padding(.vertical, 8)
+                        .opacity(pendingStatusChange[task.id] == true ? 0.3 : 1.0)
+                        .contextMenu {
+                            Button {
+                                toggleTaskStatus(task)
+                            } label: {
+                                Label(task.isCompleted ? "Mark Active" : "Mark Complete", systemImage: task.isCompleted ? "arrow.uturn.backward.circle" : "checkmark.circle")
+                            }
+                            
+                            Button {
+                                // TODO: Edit
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            
+                            Button(role: .destructive) {
+                                // TODO: Show confirmation window before deleting
+                                taskViewModel.deleteTask(task)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                            .tint(.red)
+                        }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 taskViewModel.deleteTask(task)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
+                            .tint(.red)
                             
                             Button {
                                 // TODO: Edit
@@ -117,8 +152,7 @@ struct TaskList: View {
                         }
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             Button {
-                                // TODO: Hide completed tasks from Active list after 5 seconds of marking completed
-                                taskViewModel.toggleComplete(task)
+                                toggleTaskStatus(task)
                             } label: {
                                 Label(task.isCompleted ? "Mark Active" : "Complete",
                                       systemImage: task.isCompleted ? "arrow.uturn.backward.circle" : "checkmark.circle")
@@ -137,3 +171,4 @@ struct TaskList: View {
 #Preview {
     TaskList()
 }
+
