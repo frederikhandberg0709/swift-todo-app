@@ -20,12 +20,12 @@ struct AddTaskBtn: View {
                 .opacity(isHoveringAddButton ? 1.0 : 0.5)
                 .background(isHoveringAddButton ? Color.white.opacity(0.15) : Color.white.opacity(0.10))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 12)
                         .stroke(Color.white.opacity(0.20), lineWidth: 1.5)
                 )
         }
         .buttonStyle(.plain)
-        .cornerRadius(8)
+        .cornerRadius(12)
         .onHover{ hover in
             isHoveringAddButton = hover
         }
