@@ -22,9 +22,9 @@ struct todo_appApp: App {
         Window("Add New Task", id: "add-task") {
             AddTaskView()
                 .environmentObject(taskViewModel)
-                .frame(minWidth: 450, minHeight: 550)
+                .frame(minWidth: 450, minHeight: 650)
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 450, height: 550)
+        .defaultSize(width: 450, height: 650)
     }
 }

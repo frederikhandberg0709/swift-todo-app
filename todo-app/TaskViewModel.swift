@@ -19,8 +19,8 @@ class TaskViewModel: ObservableObject {
         tasks.append(Task(title: "Organize closet", description: "Get rid of clothes I no longer wear", isCompleted: true))
     }
     
-    func addTask(title: String, description: String? = nil) {
-        let newTask = Task(title: title, description: description)
+    func addTask(title: String, description: String? = nil, deadline: Date? = nil, reminder: Date? = nil) {
+        let newTask = Task(title: title, description: description, deadline: deadline, reminder: reminder)
         tasks.append(newTask)
     }
     

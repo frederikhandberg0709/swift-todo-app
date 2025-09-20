@@ -7,6 +7,15 @@
 
 import SwiftUI
 
+private enum TaskListFormatters {
+    static let deadline: DateFormatter = {
+        let df = DateFormatter()
+        df.dateStyle = .medium
+        df.timeStyle = .short
+        return df
+    }()
+}
+
 struct TaskList: View {
     @EnvironmentObject var taskViewModel: TaskViewModel
     @State private var selectedTab: Int = 0
@@ -111,6 +120,19 @@ struct TaskList: View {
                                 Text(description)
                                     .foregroundStyle(.secondary)
                             }
+                            
+                            if let deadline = task.deadline {
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text("Deadline: \(deadline, formatter: TaskListFormatters.deadline)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .padding(.leading, 8)
+                                    
+                                    Spacer()
+                                }
+                            }
                         }
                         .padding(.vertical, 8)
                         .opacity(pendingStatusChange[task.id] == true ? 0.3 : 1.0)
@@ -133,7 +155,6 @@ struct TaskList: View {
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
-                            .tint(.red)
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {

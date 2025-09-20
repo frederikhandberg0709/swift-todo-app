@@ -11,5 +11,7 @@ struct Task: Identifiable {
     var id = UUID()
     var title: String
     var description: String? = nil
+    var deadline: Date? = nil
+    var reminder: Date? = nil
     var isCompleted: Bool = false
 }
