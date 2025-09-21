@@ -23,6 +23,16 @@ struct todo_appApp: App {
             AddTaskView()
                 .environmentObject(taskViewModel)
                 .frame(minWidth: 450, minHeight: 650)
+                .frame(maxWidth: 450, maxHeight: 650)
+        }
+        .windowResizability(.contentSize)
+        .defaultSize(width: 450, height: 650)
+        
+        Window("Edit Task", id: "edit-task") {
+            EditTaskView()
+                .environmentObject(taskViewModel)
+                .frame(minWidth: 450, minHeight: 650)
+                .frame(maxWidth: 450, maxHeight: 650)
         }
         .windowResizability(.contentSize)
         .defaultSize(width: 450, height: 650)

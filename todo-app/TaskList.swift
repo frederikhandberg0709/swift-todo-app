@@ -22,6 +22,8 @@ struct TaskList: View {
     @State private var pendingStatusChange: [UUID: Bool] = [:]
     @Namespace private var animation
     
+    @Environment(\.openWindow) private var openWindow
+    
     private func toggleTaskStatus(_ task: Task) {
         pendingStatusChange[task.id] = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -144,7 +146,8 @@ struct TaskList: View {
                             }
                             
                             Button {
-                                // TODO: Edit
+                                taskViewModel.setEditTask(task)
+                                openWindow(id: "edit-task")
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
@@ -165,7 +168,8 @@ struct TaskList: View {
                             .tint(.red)
                             
                             Button {
-                                // TODO: Edit
+                                taskViewModel.setEditTask(task)
+                                openWindow(id: "edit-task")
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }

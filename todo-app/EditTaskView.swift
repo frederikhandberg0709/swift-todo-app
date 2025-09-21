@@ -1,35 +1,49 @@
 //
-//  AddTaskWindow.swift
+//  EditTaskView.swift
 //  todo-app
 //
-//  Created by Frederik Handberg on 11/09/2025.
+//  Created by Frederik Handberg on 21/09/2025.
 //
 
 import SwiftUI
 
-struct AddTaskView: View {
+struct EditTaskView: View {
     @EnvironmentObject var taskViewModel: TaskViewModel
     @Environment(\.dismissWindow) private var dismissWindow
     
-    @State private var newTodoTitle: String = ""
+    @State private var editTodoTitle: String = ""
     @State private var isHoveringTitle: Bool = false
     @FocusState private var isTitleFocused: Bool
     
-    @State private var newTodoDescription: String = ""
+    @State private var editTodoDescription: String = ""
     @State private var isHoveringDescription: Bool = false
     @FocusState private var isDescriptionFocused: Bool
     
-    @State private var dueDate: Date?
-    @State private var reminderDate: Date?
     
-    private func isTitleFilled() -> Bool {
-        !newTodoTitle.isEmpty
+    @State private var dueDate: Date? = nil
+    @State private var reminderDate: Date? = nil
+    
+    private var currentTask: Task? {
+        taskViewModel.editTask
     }
-    
+
+    private func isTitleFilled() -> Bool {
+        !editTodoTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    func hasChanges() -> Bool {
+        guard let task = currentTask else { return false }
+        let titleChanged = editTodoTitle != task.title
+        let descriptionChanged = editTodoDescription != (task.description ?? "")
+        let dueChanged = dueDate != task.deadline
+        let reminderChanged = reminderDate != task.reminder
+        return titleChanged || descriptionChanged || dueChanged || reminderChanged
+    }
+
     var body: some View {
         ScrollView {
             VStack {
-                Text("Add New Task")
+                Text("Edit Task")
                     .font(.title)
                     .fontWeight(.medium)
                     .padding(.bottom, 30)
@@ -38,10 +52,10 @@ struct AddTaskView: View {
                     VStack(alignment: .leading) {
                         Text("Title")
                             .foregroundStyle(.secondary)
-                            .opacity(newTodoTitle.isEmpty ? 0 : 1)
+                            .opacity(editTodoTitle.isEmpty ? 0 : 1)
                         
                         HStack {
-                            TextField("Title of task...", text: $newTodoTitle)
+                            TextField("Title of task...", text: $editTodoTitle)
                                 .font(.title3)
                                 .textFieldStyle(.plain)
                                 .autocorrectionDisabled()
@@ -70,10 +84,10 @@ struct AddTaskView: View {
                     VStack(alignment: .leading) {
                         Text("Description")
                             .foregroundStyle(.secondary)
-                            .opacity(newTodoDescription.isEmpty ? 0 : 1)
+                            .opacity(editTodoDescription.isEmpty ? 0 : 1)
                         
                         HStack {
-                            TextEditorView(text: $newTodoDescription, placeholder: "Description of task...", fontSize: 15)
+                            TextEditorView(text: $editTodoDescription, placeholder: "Description of task...", fontSize: 15)
                                 .focused($isDescriptionFocused)
                                 .onExitCommand {
                                     isDescriptionFocused = false
@@ -98,35 +112,43 @@ struct AddTaskView: View {
                     
                     VStack(alignment: .leading, spacing: 20) {
                         CustomDateTimePicker("Due Date", selection: $dueDate)
-                        
                         CustomDateTimePicker("Reminder", selection: $reminderDate)
                     }
                 }
                 
                 VStack(spacing: 30) {
-                    ButtonView(title: "Create", style: PrimaryButton(), isEnabled: isTitleFilled()) {
-                        taskViewModel.addTask(title: newTodoTitle, description: newTodoDescription, deadline: dueDate, reminder: reminderDate)
+                    ButtonView(title: "Save", style: PrimaryButton(), isEnabled: isTitleFilled() && hasChanges()) {
+                        guard var task = currentTask else { return }
                         
-                        newTodoTitle = ""
-                        newTodoDescription = ""
-                        dueDate = nil
-                        reminderDate = nil
+                        task.title = editTodoTitle
+                        task.description = editTodoDescription
+                        task.deadline = dueDate
+                        task.reminder = reminderDate
+                        taskViewModel.update(task: task)
                         
                         dismissWindow()
                     }
                     
                     ButtonView(title: "Go back", style: DangerButton()) {
-                        dismissWindow(id: "add-task")
+                        dismissWindow(id: "edit-task")
                     }
                 }
                 .padding(.top, 40)
             }
             .padding(.horizontal, 30)
             .padding(.vertical, 30)
+            .onAppear {
+                if let task = currentTask {
+                    editTodoTitle = task.title
+                    editTodoDescription = task.description ?? ""
+                    dueDate = task.deadline
+                    reminderDate = task.reminder
+                }
+            }
         }
     }
 }
 
 #Preview {
-    AddTaskView()
+    EditTaskView()
 }

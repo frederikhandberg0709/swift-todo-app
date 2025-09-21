@@ -17,10 +17,10 @@ struct ContentView: View {
                 
                 AddTaskBtn()
             }
+            .padding()
              
             TaskList()
         }
-        .padding()
     }
 }
 

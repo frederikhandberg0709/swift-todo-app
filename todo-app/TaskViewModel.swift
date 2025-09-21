@@ -10,10 +10,11 @@ import Foundation
 class TaskViewModel: ObservableObject {
     @Published var tasks: [Task] = []
     @Published var searchText: String = ""
+    @Published var editTask: Task? = nil
     
     init() {
         tasks.append(Task(title: "Buy groceries", description: "Milk, eggs, bread"))
-        tasks.append(Task(title: "Read a book"))
+        tasks.append(Task(title: "Read a book", description: nil))
         tasks.append(Task(title: "Call the doctor", description: "Appointment on Monday"))
         
         tasks.append(Task(title: "Organize closet", description: "Get rid of clothes I no longer wear", isCompleted: true))
@@ -24,11 +25,19 @@ class TaskViewModel: ObservableObject {
         tasks.append(newTask)
     }
     
-    func editTask(_ task: Task, title: String, description: String?) {
+    func update(task: Task) {
         if let index = tasks.firstIndex(where: { $0.id == task.id }) {
-            tasks[index].title = title
-            tasks[index].description = description
+            tasks[index] = task
         }
+        editTask = nil
+    }
+    
+    func setEditTask(_ task: Task) {
+        editTask = task
+    }
+    
+    func clearEditTask() {
+        editTask = nil
     }
     
     func deleteTask(_ task: Task) {
